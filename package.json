@@ -1,0 +1,25 @@
+{
+  "name": "edi-file-utility",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "typescript utility functions to work with x12 EDI files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "parse": "npx ts-node src/index"
+  },
+  "keywords": [
+    "edi",
+    "x12",
+    "parser",
+    "typescript"
+  ],
+  "author": "Killian Sweeney",
+  "license": "MIT",
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.25.3",
+    "typescript": "^5.2.2"
+  }
+}

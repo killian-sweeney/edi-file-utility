@@ -2,3 +2,4 @@ src/types/bin
 
 lib/proto
 node_modules/
+src/test

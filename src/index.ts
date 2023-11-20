@@ -20,4 +20,4 @@ import Transaction from "./types/main/Transaction";
  * @description - Transaction
  * @example
  */
-export { Loop, FieldMap, LoopMap, Transaction };
+export default { Loop, FieldMap, LoopMap, Transaction };

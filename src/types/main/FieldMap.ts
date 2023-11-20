@@ -37,8 +37,8 @@ export default class FieldMap {
 
 	constructor(
 		segmentIdentifier: string,
-		identifierValue: string | null = null,
-		identifierPosition: string | number | null = null,
+		identifierValue: string | null | undefined = null,
+		identifierPosition: string | number | null | undefined= null,
 		valuePosition: number,
 	) {
 		this.segmentIdentifier = segmentIdentifier;

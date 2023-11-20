@@ -6,10 +6,10 @@
  */
 
 
-import Loop from "./types/main/Loop";
-import FieldMap from "./types/main/FieldMap";
-import LoopMap from "./types/main/LoopMap";
-import Transaction from "./types/main/Transaction";
+import Loop from "./util/class/Loop";
+import FieldMap from "./util/class/FieldMap";
+import LoopMap from "./util/class/LoopMap";
+import Transaction from "./util/class/Transaction";
 
 /**
  * @module index

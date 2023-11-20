@@ -128,5 +128,5 @@ export default class Segment {
 	}
 }
 
-let testSegment = new Segment("name")  
-console.log(testSegment)
+// let testSegment = new Segment("name")  
+// console.log(testSegment)

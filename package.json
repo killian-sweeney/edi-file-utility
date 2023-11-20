@@ -2,8 +2,8 @@
   "name": "edi-file-utility",
   "version": "0.0.1",
   "description": "typescript utility functions to work with x12 EDI files",
-  "main": "index.js",
-  "type": "commonjs",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",

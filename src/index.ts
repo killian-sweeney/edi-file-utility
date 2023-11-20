@@ -4,7 +4,7 @@
  * @param {number} b the second numnber
  * @returns reutrns the sum of the numbers.
  */
-
+console.log("test")
 
 import Loop from "./util/class/Loop";
 import FieldMap from "./util/class/FieldMap";

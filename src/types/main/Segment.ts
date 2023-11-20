@@ -8,12 +8,15 @@ import Field from "./Field";
  * const segment = new Segment("ST");
  */
 export default class Segment {
-	name: string
-	fields: Field[]
+	// name: string
+	// fields: Field[]
 
-	constructor(name: string) {
-		this.name = name;
-		this.fields = [];
+	constructor(
+		public name: string,
+		 public fields: Field[] = []
+		 ) {
+		// this.name = name;
+		// this.fields = [];
 	}
 
 	/**
@@ -39,10 +42,10 @@ export default class Segment {
 	 * //   ],
 	 * // }
 	 */
-	toJSON() {
+	toJSON(): object {
 		return {
 			name: this.name,
-			fields: this.fields.map((field: any) => field.toJSON()),
+			fields: this.fields.map((field: Field) => field),
 		};
 	}
 
@@ -124,3 +127,6 @@ export default class Segment {
 		return this;
 	}
 }
+
+let testSegment = new Segment("name")  
+console.log(testSegment)

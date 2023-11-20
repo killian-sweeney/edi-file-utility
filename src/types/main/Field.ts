@@ -88,10 +88,10 @@
  * const field = new Field("0001");
  */
 export default class Field {
-	content: string
+	// content: string
 	
-	constructor(content: string) {
-		this.content = content;
+	constructor(public content: string) {
+		// this.content = content;
 	}
 
 	/**
@@ -112,7 +112,7 @@ export default class Field {
 	 * //   content: "997",
 	 * // }
 	 */
-	toJSON() {
+	toJSON(): string {
 		return this.content;
 	}
 
@@ -128,7 +128,7 @@ export default class Field {
 	 * console.log(field.content);
 	 * // "ST"
 	 */
-	trim() {
+	trim(): Field {
 		this.content = this.content.trim().replace(/[\n\t\r\~]/g, "");
 
 		return this;
@@ -146,7 +146,7 @@ export default class Field {
 	 * console.log(length);
 	 * // 2
 	 */
-	getLength() {
+	getLength(): number {
 		return this.content.length;
 	}
 
@@ -159,7 +159,7 @@ export default class Field {
 	 * console.log(field.toString());
 	 * // "ST"
 	 */
-	toString() {
+	toString(): string {
 		return this.content;
 	}
 }

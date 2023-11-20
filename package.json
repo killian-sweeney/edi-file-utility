@@ -7,6 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
+    "proto": "node ./lib/proto/script/834",
+    "proto-named": "node ./lib/proto/script/named834",
     "parse": "npx ts-node src/index"
   },
   "keywords": [

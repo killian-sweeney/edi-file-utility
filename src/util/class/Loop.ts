@@ -38,13 +38,13 @@ export default class Loop {
 	 * //         name: "W07",
 	 * //         fields: [
 	 * //           {
-	 * //             content: "W07",
+	 * //             element: "W07",
 	 * //           },
 	 * //           {
-	 * //             content: "A",
+	 * //             element: "A",
 	 * //           },
 	 * //           {
-	 * //             content: "1",
+	 * //             element: "1",
 	 * //           }
 	 * //         ],
 	 * //       },
@@ -52,13 +52,13 @@ export default class Loop {
 	 * //         name: "N9",
 	 * //         fields: [
 	 * //           {
-	 * //             content: "N9",
+	 * //             element: "N9",
 	 * //           },
 	 * //           {
-	 * //             content: "1",
+	 * //             element: "1",
 	 * //           },
 	 * //           {
-	 * //             content: "A",
+	 * //             element: "A",
 	 * //           }
 	 * //         ],
 	 * //       },
@@ -71,8 +71,8 @@ export default class Loop {
 		return {
 			position: this.position,
 			segmentIdentifiers: this.segmentIdentifiers,
-			contents: this.contents.map((content) => {
-				return content.map((segment: any) => segment.toJSON());
+			contents: this.contents.map((element) => {
+				return element.map((segment: any) => segment.toJSON());
 			}),
 		};
 	}

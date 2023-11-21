@@ -31,13 +31,13 @@ export default class Segment {
 	 * //   name: "ST",
 	 * //   fields: [
 	 * //     {
-	 * //       content: "ST",
+	 * //       element: "ST",
 	 * //     },
 	 * //     {
-	 * //       content: "997",
+	 * //       element: "997",
 	 * //     },
 	 * //     {
-	 * //       content: "0001",
+	 * //       element: "0001",
 	 * //     },
 	 * //   ],
 	 * // }
@@ -56,9 +56,9 @@ export default class Segment {
 	 * @memberof Segment
 	 * @example
 	 * segment.trimFields();
-	 * console.log(segment.fields[0].content);
+	 * console.log(segment.fields[0].element);
 	 * // "ST"
-	 * console.log(segment.fields[1].content);
+	 * console.log(segment.fields[1].element);
 	 * // "997"
 	 */
 	trimFields() {
@@ -75,13 +75,13 @@ export default class Segment {
 	 * console.log(fields);
 	 * // [
 	 * //   {
-	 * //     content: "ST",
+	 * //     element: "ST",
 	 * //   },
 	 * //   {
-	 * //     content: "997",
+	 * //     element: "997",
 	 * //   },
 	 * //   {
-	 * //     content: "0001",
+	 * //     element: "0001",
 	 * //   },
 	 * // ]
 	 */
@@ -100,7 +100,7 @@ export default class Segment {
 	 * console.log(segment.fields);
 	 * // [
 	 * //   {
-	 * //     content: "ST",
+	 * //     element: "ST",
 	 * //   },
 	 * // ]
 	 */

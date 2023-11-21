@@ -5,106 +5,12 @@ import LoopMap from "./LoopMap.js";
 import Segment from "./Segment.js";
 
 /**
- * @version 1.0.0
- * @since 1.0.0
- * @license MIT
- * @see {@link https://github.com/mvogttech/node-x12-edi | Github}
- * @see {@link https://www.npmjs.com/package/node-x12-edi | NPM}
  * @class Transaction
  * @description A class representing an EDI transaction
  * @param {boolean} debug - Whether or not to enable debug mode
  * @returns {Transaction}
  * @example
- * const transaction = new Transaction();
- * transaction.generateSegments(file);
- * const itemLoop = new Loop();
- * itemLoop.setPosition(0);
- * itemLoop.addSegmentIdentifiers(["W07", "N9", "W20"]);
- * transaction.addLoop(itemLoop);
- * transaction.runLoops();
- * const mapLogic = {
- *  header: {
- *  transmissionDate: new FieldMap({
- * segmentIdentifier: "GS",
- * identifierValue: null,
- * identifierPosition: null,
- * valuePosition: 3,
- * }),
- * warehouseReceiptNumber: new FieldMap({
- * segmentIdentifier: "W17",
- * identifierValue: null,
- * identifierPosition: null,
- * valuePosition: 2,
- * }),
- * warehouse: {
- * name: new FieldMap({
- * segmentIdentifier: "N1",
- * identifierValue: "WH",
- * identifierPosition: 0,
- * valuePosition: 1,
- * }),
- * code: new FieldMap({
- * segmentIdentifier: "N1",
- * identifierValue: "WH",
- * identifierPosition: 0,
- * valuePosition: 3,
- * }),
- * },
- * },
- * detail: {
- * items: new LoopMap({
- * position: 0,
- * values: {
- * itemCode: new FieldMap({
- * segmentIdentifier: "W07",
- * identifierValue: null,
- * identifierPosition: null,
- * valuePosition: 4,
- * }),
- * lotCode: new FieldMap({
- * segmentIdentifier: "W07",
- * identifierValue: null,
- * identifierPosition: null,
- * valuePosition: 7,
- * }),
- * productionDate: new FieldMap({
- * segmentIdentifier: "N9",
- * identifierValue: null,
- * identifierPosition: null,
- * valuePosition: 1,
- * }),
- * netWeight: new FieldMap({
- * segmentIdentifier: "W20",
- * identifierValue: null,
- * identifierPosition: null,
- * valuePosition: 3,
- * }),
- * },
- * }),
- * },
- * };
- * const mapped = transaction.mapSegments(mapLogic);
- * console.log(mapped);
- * // {
- * //   header: {
- * //     transmissionDate: "20210101",
- * //     warehouseReceiptNumber: "1234567890",
- * //     warehouse: {
- * //       name: "WAREHOUSE NAME",
- * //       code: "WAREHOUSE CODE",
- * //     },
- * //   },
- * //   detail: {
- * //     items: [
- * //       {
- * //         itemCode: "ITEM CODE",
- * //         lotCode: "LOT CODE",
- * //         productionDate: "20210101",
- * //         netWeight: "1000",
- * //       },
- * //     ],
- * //   },
- * // }
+
  */
 export default class Transaction {
 	segments: Segment[];
@@ -130,16 +36,16 @@ export default class Transaction {
 	 * //     {
 	 * //       name: 'ST',
 	 * //       fields: [
-	 * //         { content: '945', position: 0 },
-	 * //         { content: '0001', position: 1 },
+	 * //         { element: '945', position: 0 },
+	 * //         { element: '0001', position: 1 },
 	 * //       ]
 	 * //     },
 	 * //     {
 	 * //       name: 'B4',
 	 * //       fields: [
-	 * //         { content: 'N', position: 0 },
-	 * //         { content: '1234567890', position: 1 },
-	 * //         { content: '20210101', position: 2 },
+	 * //         { element: 'N', position: 0 },
+	 * //         { element: '1234567890', position: 1 },
+	 * //         { element: '20210101', position: 2 },
 	 * //       ]
 	 * //     },
 	 * //   ],
@@ -147,7 +53,7 @@ export default class Transaction {
 	 * //     {
 	 * //       position: 0,
 	 * //       segmentIdentifiers: [ 'W07', 'N9', 'W20' ],
-	 * //       contents: []
+	 * //       elements: []
 	 * //     }
 	 * //   ]
 	 * // }
@@ -196,16 +102,16 @@ export default class Transaction {
 	 * //   {
 	 * //     name: 'ST',
 	 * //     fields: [
-	 * //       { content: '945', position: 0 },
-	 * //       { content: '0001', position: 1 },
+	 * //       { element: '945', position: 0 },
+	 * //       { element: '0001', position: 1 },
 	 * //     ]
 	 * //   },
 	 * //   {
 	 * //     name: 'B4',
 	 * //     fields: [
-	 * //       { content: 'N', position: 0 },
-	 * //       { content: '1234567890', position: 1 },
-	 * //       { content: '20210101', position: 2 },
+	 * //       { element: 'N', position: 0 },
+	 * //       { element: '1234567890', position: 1 },
+	 * //       { element: '20210101', position: 2 },
 	 * //     ]
 	 * //   },
 	 * // ]
@@ -242,33 +148,33 @@ export default class Transaction {
 	 * //   {
 	 * //     position: 0,
 	 * //     segmentIdentifiers: [ 'W07', 'N9', 'W20' ],
-	 * //     contents: [
+	 * //     elements: [
 	 * //       [
 	 * //         {
 	 * //           name: 'W07',
 	 * //           fields: [
-	 * //             { content: '100', position: 0 },
-	 * //             { content: 'EA', position: 1 },
-	 * //             { content: 'ITEM CODE', position: 4 },
-	 * //             { content: '100', position: 5 },
-	 * //             { content: 'LB', position: 6 },
-	 * //             { content: 'LOT CODE', position: 7 },
+	 * //             { element: '100', position: 0 },
+	 * //             { element: 'EA', position: 1 },
+	 * //             { element: 'ITEM CODE', position: 4 },
+	 * //             { element: '100', position: 5 },
+	 * //             { element: 'LB', position: 6 },
+	 * //             { element: 'LOT CODE', position: 7 },
 	 * //           ]
 	 * //         },
 	 * //         {
 	 * //           name: 'N9',
 	 * //           fields: [
-	 * //             { content: 'PD', position: 0 },
-	 * //             { content: '20210101', position: 1 },
+	 * //             { element: 'PD', position: 0 },
+	 * //             { element: '20210101', position: 1 },
 	 * //           ]
 	 * //         },
 	 * //         {
 	 * //           name: 'W20',
 	 * //           fields: [
-	 * //             { content: '1000', position: 0 },
-	 * //             { content: 'LB', position: 1 },
-	 * //             { content: '1000', position: 3 },
-	 * //             { content: 'LB', position: 4 },
+	 * //             { element: '1000', position: 0 },
+	 * //             { element: 'LB', position: 1 },
+	 * //             { element: '1000', position: 3 },
+	 * //             { element: 'LB', position: 4 },
 	 * //           ]
 	 * //         }
 	 * //       ]
@@ -341,7 +247,7 @@ export default class Transaction {
 		// 		return (
 		// 			segment.name === identifierStartsLoop.segmentIdentifier &&
 		// 			segment.getFields()[identifierStartsLoop.identifierPosition]
-		// 				.content === identifierStartsLoop.identifierValue
+		// 				.element === identifierStartsLoop.identifierValue
 		// 		);
 		// 	});
 		// 	segments = segments.splice(loopStartIndex, segments.length - 1);
@@ -358,7 +264,7 @@ export default class Transaction {
 				// 	if (loopSegments.length === 0) {
 				// 		if (
 				// 			segment.getFields()[identifierStartsLoop.identifierPosition]
-				// 				.content !== identifierStartsLoop.identifierValue
+				// 				.element !== identifierStartsLoop.identifierValue
 				// 		) {
 				// 			continue;
 				// 		}
@@ -517,7 +423,7 @@ export default class Transaction {
 				} else {
 					segment = segment.filter((segment) => {
 						return (
-							segment.getFields()[value.identifierPosition].content ===
+							segment.getFields()[value.identifierPosition].element ===
 							value.identifierValue
 						);
 					});
@@ -535,11 +441,11 @@ export default class Transaction {
 				if (value.identifierValue === null) {
 					if (segment.getFields()[value.valuePosition] === undefined) return;
 					return (result[key] =
-						segment.getFields()[value.valuePosition].content);
+						segment.getFields()[value.valuePosition].element);
 				}
 
 				const isValid =
-					segment.getFields()[value.identifierPosition].content ===
+					segment.getFields()[value.identifierPosition].element ===
 					value.identifierValue;
 
 				if (!isValid) {
@@ -547,7 +453,7 @@ export default class Transaction {
 						console.error(
 							"[Invalid identifier value]",
 							"Expected: ",
-							segment.getFields()[value.identifierPosition].content,
+							segment.getFields()[value.identifierPosition].element,
 							"Received: ",
 							value.identifierValue
 						);
@@ -561,7 +467,7 @@ export default class Transaction {
 					return;
 				}
 
-				return (result[key] = field.content);
+				return (result[key] = field.element);
 			}
 
 			// LoopMap is used to map a loop to a key in the result object
@@ -571,8 +477,8 @@ export default class Transaction {
 					return;
 				}
 
-				result[key] = loop.contents.map((content: any) => {
-					return this.mapSegments(value.values, content);
+				result[key] = loop.contents.map((element: any) => {
+					return this.mapSegments(value.values, element);
 				});
 
 				return;
@@ -669,11 +575,11 @@ export default class Transaction {
 	 * @memberof Transaction
 	 * @method generateSegments
 	 * @description Generate segments for instance from a string
-	 * @param {string} content
+	 * @param {string} element
 	 * @returns {void}
 	 */
-	generateSegments(content: string) {
-		const segments = content.split("\n");
+	generateSegments(element: string) {
+		const segments = element.split("\n");
 		segments.forEach((segment) => {
 			const fields = segment.split("*");
 			const segmentName = fields[0];

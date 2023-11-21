@@ -1,6 +1,6 @@
 /**
  * @class FieldMap
- * @description Used to declare the position of a field in a segment to a json object key value.
+ * @description Used to declare the position of a Field in a segment to a json object key value.
  * @param {Object} options
  * @param {String} options.segmentIdentifier The segment identifier.
  * @param {String} options.identifierValue The value of the field identifier.

@@ -1,8 +1,8 @@
 
 
 // export default class JS_Field {
-// 	constructor(content) {
-// 		this.content = content;
+// 	constructor(element) {
+// 		this.element = element;
 // 	}
 
 // 	/**
@@ -14,17 +14,17 @@
 // 	 * const json = field.toJSON();
 // 	 * console.log(json);
 // 	 * // {
-// 	 * //   content: "ST",
+// 	 * //   element: "ST",
 // 	 * // }
 // 	 * @example
 // 	 * const json = field.toJSON();
 // 	 * console.log(json);
 // 	 * // {
-// 	 * //   content: "997",
+// 	 * //   element: "997",
 // 	 * // }
 // 	 */
 // 	toJSON() {
-// 		return this.content;
+// 		return this.element;
 // 	}
 
 // 	/**
@@ -33,14 +33,14 @@
 // 	 * @returns {Field}
 // 	 * @memberof Field
 // 	 * @example
-// 	 * console.log(field.content);
+// 	 * console.log(field.element);
 // 	 * // "  ST\n"
 // 	 * field.trim();
-// 	 * console.log(field.content);
+// 	 * console.log(field.element);
 // 	 * // "ST"
 // 	 */
 // 	trim() {
-// 		this.content = this.content.trim().replace(/[\n\t\r\~]/g, "");
+// 		this.element = this.element.trim().replace(/[\n\t\r\~]/g, "");
 
 // 		return this;
 // 	}
@@ -51,14 +51,14 @@
 // 	 * @returns {Number}
 // 	 * @memberof Field
 // 	 * @example
-// 	 * console.log(field.content);
+// 	 * console.log(field.element);
 // 	 * // "ST"
 // 	 * const length = field.getLength();
 // 	 * console.log(length);
 // 	 * // 2
 // 	 */
 // 	getLength() {
-// 		return this.content.length;
+// 		return this.element.length;
 // 	}
 
 // 	/**
@@ -71,7 +71,7 @@
 // 	 * // "ST"
 // 	 */
 // 	toString() {
-// 		return this.content;
+// 		return this.element;
 // 	}
 // }
 
@@ -79,7 +79,7 @@
 /**
  * @class Field
  * @description Represents a Field in a Segment.
- * @param {String} content The content of the Field.
+ * @param {String} element The data element in the Field.
  * @example
  * const field = new Field("ST");
  * @example
@@ -88,10 +88,10 @@
  * const field = new Field("0001");
  */
 export default class Field {
-	// content: string
+
 	
-	constructor(public content: string) {
-		// this.content = content;
+	constructor(public element: string) {
+		// this.element = element;
 	}
 
 	/**
@@ -103,17 +103,17 @@ export default class Field {
 	 * const json = field.toJSON();
 	 * console.log(json);
 	 * // {
-	 * //   content: "ST",
+	 * //   element: "ST",
 	 * // }
 	 * @example
 	 * const json = field.toJSON();
 	 * console.log(json);
 	 * // {
-	 * //   content: "997",
+	 * //   element: "997",
 	 * // }
 	 */
 	toJSON(): string {
-		return this.content;
+		return this.element;
 	}
 
 	/**
@@ -122,14 +122,14 @@ export default class Field {
 	 * @returns {Field}
 	 * @memberof Field
 	 * @example
-	 * console.log(field.content);
+	 * console.log(field.element);
 	 * // "  ST\n"
 	 * field.trim();
-	 * console.log(field.content);
+	 * console.log(field.element);
 	 * // "ST"
 	 */
 	trim(): Field {
-		this.content = this.content.trim().replace(/[\n\t\r\~]/g, "");
+		this.element = this.element.trim().replace(/[\n\t\r\~]/g, "");
 
 		return this;
 	}
@@ -140,14 +140,14 @@ export default class Field {
 	 * @returns {Number}
 	 * @memberof Field
 	 * @example
-	 * console.log(field.content);
+	 * console.log(field.element);
 	 * // "ST"
 	 * const length = field.getLength();
 	 * console.log(length);
 	 * // 2
 	 */
 	getLength(): number {
-		return this.content.length;
+		return this.element.length;
 	}
 
 	/**
@@ -160,6 +160,8 @@ export default class Field {
 	 * // "ST"
 	 */
 	toString(): string {
-		return this.content;
+		return this.element;
 	}
 }
+let testField = new Field("test") 
+console.log(testField); 

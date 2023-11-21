@@ -10,7 +10,7 @@ import Segment from "./Segment.js";
  * @param {boolean} debug - Whether or not to enable debug mode
  * @returns {Transaction}
  * @example
-
+	TO DO...
  */
 export default class Transaction {
 	segments: Segment[];
@@ -217,19 +217,19 @@ export default class Transaction {
 	 */
 	runLoops(): void {
 		this.loops.forEach((loop) => {
-			this.#runLoop(loop);
+			this.runLoop(loop);
 		});
 	}
 
 	/**
 	 * @access private
 	 * @memberof Transaction
-	 * @method #runLoop
+	 * @method runLoop
 	 * @description Run a loop
 	 * @param {Loop} loop - The loop to run
 	 * @returns {void}
 	 */
-	#runLoop(loop: Loop): void {
+	private runLoop(loop: Loop): void {
 		let segments = this.getSegments();
 		const identifierStartsLoop = loop.segmentIdentifiers[0];
 
@@ -501,14 +501,14 @@ export default class Transaction {
 	}
 
 	/**
-	 * @private
+	 * @access private
 	 * @memberof Transaction
 	 * @method addSegment
 	 * @description Add a segment to the transaction instance
 	 * @param {Segment} segment
 	 * @returns {Transaction}
 	 */
-	addSegment(segment: Segment): Transaction {
+	private addSegment(segment: Segment): Transaction {
 		this.segments.push(segment);
 
 		return this;

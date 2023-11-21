@@ -63,5 +63,3 @@ export default class FieldMap {
 		};
 	}
 }
-let testFieldMap = new FieldMap("INS", null, null, 1)
-console.log(testFieldMap)

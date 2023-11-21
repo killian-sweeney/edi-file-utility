@@ -82,7 +82,3 @@ export default class Field {
 		return this.element;
 	}
 }
-let testField = new Field("test") 
-console.log(testField);
-testField.element = "update"
-console.log(testField);

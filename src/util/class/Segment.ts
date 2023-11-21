@@ -122,6 +122,3 @@ export default class Segment {
 		return this;
 	}
 }
-
-let testSegment = new Segment("name")
-console.log(testSegment)

@@ -215,9 +215,3 @@ export default class Loop {
 		return this;
 	}
 }
-
-
-let testLoop = new Loop()
-testLoop.setPosition(0)
-testLoop.addSegmentIdentifier("INS")
-console.log(testLoop)

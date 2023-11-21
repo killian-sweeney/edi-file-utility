@@ -16,4 +16,4 @@ import Transaction from "./util/class/Transaction";
  * @description - Transaction
  * @example
  */
-export default { Field, FieldMap, Segment, Loop, LoopMap, Transaction };
+export { Field, FieldMap, Segment, Loop, LoopMap, Transaction };

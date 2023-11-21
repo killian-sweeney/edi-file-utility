@@ -1,6 +1,4 @@
-src/types/bin
-
-lib/proto
 node_modules/
-src/util/bin
+bin/
 dist/
+notes.md

@@ -1,24 +1,20 @@
 /**
  * @class Loop
- * @description A Loop is a collection of segments that are related to one another. In the example below, we create a loop starting from the W07 segment, and ending at the W20 segment. When you run a loop, it will find all segments between the W07 and W20 segments, and group them together.
+ * @description A Loop is a collection of Segments that are related to one another.
  * @example
  * const itemLoop = new Loop();
  * itemLoop.setPosition(0);
- * itemLoop.addSegmentIdentifiers(["W07", "N9", "W20"]);
+ * itemLoop.addSegmentIdentifiers(["INS", "REF", "NM1"]);
  * transaction.addLoop(itemLoop);
  * transaction.runLoops();
  */
 export default class Loop {
-	position: number | null = null;
-	segmentIdentifiers: string[];
-	contents: Array<Array<string>>;
 
-
-	constructor() {
-		this.position = null;
-		this.segmentIdentifiers = [];
-		this.contents = [];
-	}
+	constructor(
+		public position: number | null = null,
+		public segmentIdentifiers: string[] = [],
+		public contents: Array<Array<string>> = [[]]
+	) { }
 
 	/**
 	 * @method toJSON
@@ -67,7 +63,7 @@ export default class Loop {
 	 * //   ],
 	 * // }
 	 */
-	toJSON() {
+	toJSON(): object {
 		return {
 			position: this.position,
 			segmentIdentifiers: this.segmentIdentifiers,
@@ -87,7 +83,7 @@ export default class Loop {
 	 * console.log(lastSegmentIdentifier);
 	 * // "W20"
 	 */
-	getLastSegmentIdentifier() {
+	getLastSegmentIdentifier(): string {
 		return this.segmentIdentifiers[this.segmentIdentifiers.length - 1];
 	}
 
@@ -109,7 +105,7 @@ export default class Loop {
 	 * console.log(thirdSegmentIdentifier);
 	 * // "W20"
 	 */
-	getSegmentIdentifiers() {
+	getSegmentIdentifiers(): Array<string> {
 		let identifiers: any = [];
 		for (let identifier of this.segmentIdentifiers) {
 			switch (typeof identifier) {
@@ -136,7 +132,7 @@ export default class Loop {
 	 * @example
 	 * loop.addSegmentIdentifier("W20");
 	 */
-	addSegmentIdentifier(segmentIdentifier: string) {
+	addSegmentIdentifier(segmentIdentifier: string): Loop {
 		this.segmentIdentifiers.push(segmentIdentifier);
 
 		return this;
@@ -161,7 +157,7 @@ export default class Loop {
 	 *     "N9"
 	 *   ]);
 	 */
-	addSegmentIdentifiers(segmentIdentifiers: string[] ) {
+	addSegmentIdentifiers(segmentIdentifiers: string[]): Loop {
 		segmentIdentifiers.forEach((segmentIdentifier: string) => {
 			this.addSegmentIdentifier(segmentIdentifier);
 		});
@@ -182,7 +178,7 @@ export default class Loop {
 	 * @example
 	 * loop.removeSegmentIdentifier("W20");
 	 */
-	removeSegmentIdentifier(segmentIdentifier: string) {
+	removeSegmentIdentifier(segmentIdentifier: string): Loop {
 		this.segmentIdentifiers = this.segmentIdentifiers.filter(
 			(s) => s !== segmentIdentifier
 		);
@@ -200,7 +196,7 @@ export default class Loop {
 	 * console.log(position);
 	 * // 0
 	 */
-	getPosition() {
+	getPosition(): number | null {
 		return this.position;
 	}
 
@@ -213,9 +209,15 @@ export default class Loop {
 	 * @example
 	 * loop.setPosition(0);
 	 */
-	setPosition(position: number) {
+	setPosition(position: number): Loop {
 		this.position = position;
 
 		return this;
 	}
 }
+
+
+let testLoop = new Loop()
+testLoop.setPosition(0)
+testLoop.addSegmentIdentifier("INS")
+console.log(testLoop)

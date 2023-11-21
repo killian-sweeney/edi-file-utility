@@ -5,19 +5,14 @@ import Field from "./Field";
  * @description A Segment is a collection of Fields.
  * @param {String} name The name of the Segment, or the segment identifier.
  * @example
- * const segment = new Segment("ST");
+ * const segment = new Segment("REF");
  */
 export default class Segment {
-	// name: string
-	// fields: Field[]
 
 	constructor(
 		public name: string,
-		 public fields: Field[] = []
-		 ) {
-		// this.name = name;
-		// this.fields = [];
-	}
+		public fields: Field[] = []
+	) { }
 
 	/**
 	 * @method toJSON
@@ -28,16 +23,16 @@ export default class Segment {
 	 * const json = segment.toJSON();
 	 * console.log(json);
 	 * // {
-	 * //   name: "ST",
+	 * //   name: "REF",
 	 * //   fields: [
 	 * //     {
-	 * //       element: "ST",
+	 * //       element: "REF",
 	 * //     },
 	 * //     {
-	 * //       element: "997",
+	 * //       element: "0F",
 	 * //     },
 	 * //     {
-	 * //       element: "0001",
+	 * //       element: "ABCXYZ",
 	 * //     },
 	 * //   ],
 	 * // }
@@ -57,11 +52,11 @@ export default class Segment {
 	 * @example
 	 * segment.trimFields();
 	 * console.log(segment.fields[0].element);
-	 * // "ST"
+	 * // "REF"
 	 * console.log(segment.fields[1].element);
-	 * // "997"
+	 * // "0F"
 	 */
-	trimFields() {
+	trimFields(): void {
 		this.fields.forEach((field) => field.trim());
 	}
 
@@ -75,17 +70,17 @@ export default class Segment {
 	 * console.log(fields);
 	 * // [
 	 * //   {
-	 * //     element: "ST",
+	 * //     element: "REF",
 	 * //   },
 	 * //   {
-	 * //     element: "997",
+	 * //     element: "0F",
 	 * //   },
 	 * //   {
-	 * //     element: "0001",
+	 * //     element: "ABCXYZ",
 	 * //   },
 	 * // ]
 	 */
-	getFields() {
+	getFields(): Array<Field> {
 		return this.fields;
 	}
 
@@ -104,7 +99,7 @@ export default class Segment {
 	 * //   },
 	 * // ]
 	 */
-	addField(field: Field) {
+	addField(field: Field): Segment {
 		this.fields.push(field);
 
 		return this;
@@ -121,12 +116,12 @@ export default class Segment {
 	 * console.log(segment.fields);
 	 * // []
 	 */
-	removeField(field: Field) {
+	removeField(field: Field): Segment {
 		this.fields = this.fields.filter((f) => f !== field);
 
 		return this;
 	}
 }
 
-// let testSegment = new Segment("name")  
-// console.log(testSegment)
+let testSegment = new Segment("name")
+console.log(testSegment)

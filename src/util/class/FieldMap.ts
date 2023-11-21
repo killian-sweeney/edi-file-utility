@@ -8,44 +8,36 @@
  * @param {Number} options.valuePosition The position of the field value.
  * @example
  * const fieldMap = new FieldMap({
- *  segmentIdentifier: "W07",
+ *  segmentIdentifier: "INS",
  * identifierValue: null,
  * identifierPosition: null,
- * valuePosition: 4,
+ * valuePosition: 1,
  * });
  * @example
  * const newObjectToMapFieldsTo = {
- *  itemCode: new FieldMap({
- *    segmentIdentifier: "W07",
- *    identifierValue: null,
+ *  subscriberNumber: new FieldMap({
+ *    segmentIdentifier: "REF",
+ *    identifierValue: "0F",
  *    identifierPosition: null,
- *   valuePosition: 4,
+ *   valuePosition: 1,
  *  }),
- *  lotCode: new FieldMap({
- *    segmentIdentifier: "W07",
- *    identifierValue: null,
+ *  groupId: new FieldMap({
+ *    segmentIdentifier: "REF",
+ *    identifierValue: 1L,
  *    identifierPosition: null,
  *    valuePosition: 7,
  *  }),
  * };
  */
+
 export default class FieldMap {
-	segmentIdentifier: string;
-	identifierValue: string | null | undefined = null;
-	identifierPosition: any = null;
-	valuePosition: number;
 
 	constructor(
-		segmentIdentifier: string,
-		identifierValue: string | null | undefined = null,
-		identifierPosition: string | number | null | undefined= null,
-		valuePosition: number,
-	) {
-		this.segmentIdentifier = segmentIdentifier;
-		this.identifierValue = identifierValue;
-		this.identifierPosition = identifierPosition;
-		this.valuePosition = valuePosition;
-	}
+		public segmentIdentifier: string,
+		public identifierValue: string | null = null,
+		public identifierPosition: number | null = null,
+		public valuePosition: number
+	) {	}
 
 	/**
 	 * @method toJSON
@@ -56,13 +48,13 @@ export default class FieldMap {
 	 * const json = fieldMap.toJSON();
 	 * console.log(json);
 	 * // {
-	 * //   segmentIdentifier: "W07",
+	 * //   segmentIdentifier: "INS",
 	 * //   identifierValue: null,
 	 * //   identifierPosition: null,
-	 * //   valuePosition: 4,
+	 * //   valuePosition: 1,
 	 * // }
 	 */
-	toJSON() {
+	toJSON(): object {
 		return {
 			segmentIdentifier: this.segmentIdentifier,
 			identifierValue: this.identifierValue,
@@ -71,3 +63,5 @@ export default class FieldMap {
 		};
 	}
 }
+let testFieldMap = new FieldMap("INS", null, null, 1)
+console.log(testFieldMap)

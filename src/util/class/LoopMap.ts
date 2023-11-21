@@ -31,12 +31,5 @@
  *};
  */
 export default class LoopMap {
-	position: number;
-	values: object;
-
-
-	constructor(options: { position: number, values: object }) {
-		this.position = options.position;
-		this.values = options.values;
-	}
+	constructor(public position: number, public values: object) {	}
 }

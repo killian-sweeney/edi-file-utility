@@ -58,7 +58,7 @@ export default class Transaction {
 	 * //   ]
 	 * // }
 	 */
-	toJSON() {
+	toJSON(): object {
 		return {
 			segments: this.segments.map((segment) => segment.toJSON()),
 			loops: this.loops.map((loop) => loop.toJSON()),
@@ -68,7 +68,7 @@ export default class Transaction {
 	/**
 	 * @memberof Transaction
 	 * @method getType
-	 * @description Get the transaction type
+	 * @description Get the type of EDI transaction 
 	 * @returns {string}
 	 * @example
 	 * const type = transaction.getType();
@@ -77,7 +77,7 @@ export default class Transaction {
 	 * @throws {Error} No ST segment found
 	 * @throws {Error} No ST02 segment found
 	 */
-	getType() {
+	getTransactionType(): Field {
 		this.debug && console.log("[Getting Transaction Type]");
 		const ST = this.segments.find((segment) => segment.name === "ST");
 		this.debug && console.log("ST", ST);
@@ -116,7 +116,7 @@ export default class Transaction {
 	 * //   },
 	 * // ]
 	 */
-	getSegments() {
+	getSegments(): Array<Segment> {
 		return this.segments.map((segment) => segment);
 	}
 
@@ -132,7 +132,7 @@ export default class Transaction {
 	 * //   'ST', 'B4', 'N1', 'N3', 'N4', 'G61', 'N1', 'N3', 'N4', 'G61',
 	 * // ]
 	 */
-	listSegmentIdentifiers() {
+	listSegmentIdentifiers(): Array<string> {
 		return this.segments.map((segment) => segment.name);
 	}
 
@@ -182,7 +182,7 @@ export default class Transaction {
 	 * //   }
 	 * // ]
 	 */
-	getLoops() {
+	getLoops(): Array<Loop> {
 		return this.loops.map((loop) => loop);
 	}
 
@@ -205,7 +205,7 @@ export default class Transaction {
 	 * //   }
 	 * // ]
 	 */
-	addLoop(loop: Loop) {
+	addLoop(loop: Loop): void {
 		this.loops.push(loop);
 	}
 
@@ -215,7 +215,7 @@ export default class Transaction {
 	 * @description Run all loops in the transaction instance
 	 * @returns {void}
 	 */
-	runLoops() {
+	runLoops(): void {
 		this.loops.forEach((loop) => {
 			this.#runLoop(loop);
 		});
@@ -229,7 +229,7 @@ export default class Transaction {
 	 * @param {Loop} loop - The loop to run
 	 * @returns {void}
 	 */
-	#runLoop(loop: Loop) {
+	#runLoop(loop: Loop): void {
 		let segments = this.getSegments();
 		const identifierStartsLoop = loop.segmentIdentifiers[0];
 
@@ -240,7 +240,7 @@ export default class Transaction {
 				}),
 				segments.length - 1
 			);
-		} 
+		}
 		// can never be object...
 		// else if (typeof identifierStartsLoop === "object") {
 		// 	const loopStartIndex = segments.findIndex((segment) => {
@@ -397,15 +397,11 @@ export default class Transaction {
 	 * //   },
 	 * // }
 	 */
-	mapSegments(mapLogic: object, mapSegments: Segment[] | null = null) {
+	mapSegments(mapLogic: object, mapSegments: Segment[] | null = null): object {
 		let result: any = {};
 
-		if (!mapSegments) {
-			mapSegments = this.getSegments();
-		};
-
 		Object.entries(mapLogic).forEach(([key, value]) => {
-			// FieldMap is where the magic happens
+
 			// The FieldMap object is used to map a field from a segment to a key in the result object
 			if (value instanceof FieldMap) {
 				if (!mapSegments) {
@@ -416,21 +412,24 @@ export default class Transaction {
 					(segment: Segment) => segment.name === value.segmentIdentifier,
 				);
 
-// to handle if the segment is only one segment?
-
 				if (segment.length === 1) {
 					segment = segment[0];
-				} else {
+				}
+				else {
 					segment = segment.filter((segment) => {
-						return (
-							segment.getFields()[value.identifierPosition].element ===
-							value.identifierValue
-						);
+						if (value.identifierPosition !== null) {
+							return (
+								segment.getFields()[value.identifierPosition].element ===
+								value.identifierValue
+							);
+						} else {
+							return (null);
+						}
 					});
 					segment = segment[0];
 				}
 
-// end of weird handler
+				// end of weird handler
 
 				if (!segment) {
 					this.debug &&
@@ -444,20 +443,27 @@ export default class Transaction {
 						segment.getFields()[value.valuePosition].element);
 				}
 
-				const isValid =
-					segment.getFields()[value.identifierPosition].element ===
-					value.identifierValue;
 
-				if (!isValid) {
-					this.debug &&
-						console.error(
-							"[Invalid identifier value]",
-							"Expected: ",
-							segment.getFields()[value.identifierPosition].element,
-							"Received: ",
-							value.identifierValue
-						);
-					return;
+				if (value.identifierPosition === null) {
+
+				} else {
+
+					const isValid =
+						segment.getFields()[value.identifierPosition].element ===
+						value.identifierValue;
+
+					if (!isValid) {
+						this.debug &&
+							console.error(
+								"[Invalid identifier value]",
+								"Expected: ",
+								segment.getFields()[value.identifierPosition].element,
+								"Received: ",
+								value.identifierValue
+							);
+						return;
+					}
+
 				}
 
 				const field: any = segment.getFields()[value.valuePosition];
@@ -497,12 +503,12 @@ export default class Transaction {
 	/**
 	 * @private
 	 * @memberof Transaction
-	 * @method #addSegment
+	 * @method addSegment
 	 * @description Add a segment to the transaction instance
 	 * @param {Segment} segment
 	 * @returns {Transaction}
 	 */
-	#addSegment(segment: Segment) {
+	addSegment(segment: Segment): Transaction {
 		this.segments.push(segment);
 
 		return this;
@@ -515,7 +521,7 @@ export default class Transaction {
 	 * @param {Segment} segment
 	 * @returns {Transaction}
 	 */
-	removeSegment(segment: Segment) {
+	removeSegment(segment: Segment): Transaction {
 		this.segments = this.segments.filter((s) => s !== segment);
 
 		return this;
@@ -527,7 +533,7 @@ export default class Transaction {
 	 * @description Infer loops from the transaction instance
 	 * @returns {void}
 	 */
-	inferLoops() {
+	inferLoops(): void {
 		const segments = this.getSegments();
 
 		// Count the number of times a segment appears in the transaction
@@ -578,7 +584,7 @@ export default class Transaction {
 	 * @param {string} element
 	 * @returns {void}
 	 */
-	generateSegments(element: string) {
+	generateSegments(element: string): void {
 		const segments = element.split("\n");
 		segments.forEach((segment) => {
 			const fields = segment.split("*");
@@ -590,7 +596,7 @@ export default class Transaction {
 				fieldInstance.trim();
 				segmentInstance.addField(fieldInstance);
 			});
-			this.#addSegment(segmentInstance);
+			this.addSegment(segmentInstance);
 		});
 	}
 }

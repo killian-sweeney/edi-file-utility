@@ -20,7 +20,7 @@
   "author": "Killian Sweeney",
   "license": "MIT",
   "devDependencies": {
-    "ts-node": "^10.9.1",
+    "tsx": "^4.4.0",
     "typedoc": "^0.25.3",
     "typedoc-material-theme": "^1.0.0",
     "typescript": "^5.2.2"

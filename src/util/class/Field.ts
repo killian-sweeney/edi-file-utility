@@ -3,11 +3,11 @@
  * @description Represents a Field in a Segment.
  * @param {String} element The data element in the Field.
  * @example
- * const field = new Field("ST");
+ * const field = new Field("INS");
  * @example
- * const field = new Field("997");
+ * const field = new Field("Y");
  * @example
- * const field = new Field("0001");
+ * const field = new Field("18");
  */
 export default class Field {
 
@@ -82,3 +82,5 @@ export default class Field {
 		return this.element;
 	}
 }
+let field = new Field("INS")
+console.log(JSON.stringify(field))

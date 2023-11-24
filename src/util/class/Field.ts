@@ -23,7 +23,29 @@ export default class Field {
 	getLength(): number {
 		return this.element.length;
 	}
+
+	/**
+	 * @description Returns the Field object as a JSON string.
+	 * @returns {string}
+	 * @example 
+	 * console.log(field.toJson());
+	 * // {"element":"INS"}
+	 */
+	toJson(): string {
+		return JSON.stringify(this);
+	}
 	
+	/**
+	 * @description Returns the Field.element as a string.
+	 * @returns {String}
+	 * @example
+	 * console.log(field.toString());
+	 * // "ST"
+	 */
+	toString(): string {
+		return JSON.stringify(this.element);
+	}
+
 	/**
 	 * @description Removes whitespace from the Field and replaces newlines, tabs, and carriage returns with an empty string.
 	 * @returns {Field}
@@ -38,16 +60,5 @@ export default class Field {
 		this.element = this.element.trim().replace(/[\n\t\r\~]/g, "");
 
 		return this;
-	}
-
-	/**
-	 * @description Returns the Field as a string.
-	 * @returns {String}
-	 * @example
-	 * console.log(field.toString());
-	 * // "ST"
-	 */
-	toString(): string {
-		return this.element;
 	}
 }

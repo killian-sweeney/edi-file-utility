@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
-    "build-docs": "npx typedoc src/ --plugin typedoc-material-theme --themeColor '#6cffa0'",
+    "build-docs": "npx typedoc src/ --plugin typedoc-material-theme --themeColor '#00ffaa'",
     "proto": "node ./lib/proto/script/834",
     "proto-named": "node ./lib/proto/script/named834",
     "parse": "npx ts-node src/index"

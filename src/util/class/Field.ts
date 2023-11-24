@@ -1,45 +1,32 @@
 /**
  * @class Field
- * @description Represents a Field in a Segment.
- * @param {String} element The data element in the Field.
+ * @description Represents a value in a Segment.
  * @example
  * const field = new Field("INS");
- * @example
- * const field = new Field("Y");
- * @example
- * const field = new Field("18");
- */
+ * console.log(field.toString())
+ * // "INS"
+*/
 export default class Field {
 
 	constructor(public element: string) { }
 
 	/**
-	 * @method toJSON
-	 * @description Returns a JSON representation of the Field.
-	 * @returns {Object}
-	 * @memberof Field
+	 * @description Returns the length of the Field.
+	 * @returns {Number}
 	 * @example
-	 * const json = field.toJSON();
-	 * console.log(json);
-	 * // {
-	 * //   element: "ST",
-	 * // }
-	 * @example
-	 * const json = field.toJSON();
-	 * console.log(json);
-	 * // {
-	 * //   element: "997",
-	 * // }
+	 * console.log(field.element);
+	 * // "INS"
+	 * const length = field.getLength();
+	 * console.log(length);
+	 * // 3
 	 */
-	toJSON(): string {
-		return this.element;
+	getLength(): number {
+		return this.element.length;
 	}
-
+	
 	/**
-	 * @method trim
 	 * @description Removes whitespace from the Field and replaces newlines, tabs, and carriage returns with an empty string.
 	 * @returns {Field}
-	 * @memberof Field
 	 * @example
 	 * console.log(field.element);
 	 * // "  ST\n"
@@ -54,26 +41,8 @@ export default class Field {
 	}
 
 	/**
-	 * @method getLength
-	 * @description Returns the length of the Field.
-	 * @returns {Number}
-	 * @memberof Field
-	 * @example
-	 * console.log(field.element);
-	 * // "INS"
-	 * const length = field.getLength();
-	 * console.log(length);
-	 * // 3
-	 */
-	getLength(): number {
-		return this.element.length;
-	}
-
-	/**
-	 * @method toString
 	 * @description Returns the Field as a string.
 	 * @returns {String}
-	 * @memberof Field
 	 * @example
 	 * console.log(field.toString());
 	 * // "ST"
@@ -82,5 +51,3 @@ export default class Field {
 		return this.element;
 	}
 }
-let field = new Field("INS")
-console.log(JSON.stringify(field))

@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc",
+    "build-docs": "npx typedoc src/ --plugin typedoc-material-theme --themeColor '#6cffa0'",
     "proto": "node ./lib/proto/script/834",
     "proto-named": "node ./lib/proto/script/named834",
     "parse": "npx ts-node src/index"
@@ -22,7 +23,7 @@
   "devDependencies": {
     "tsx": "^4.4.0",
     "typedoc": "^0.25.3",
-    "typedoc-material-theme": "^1.0.0",
+    "typedoc-material-theme": "^1.0.1",
     "typescript": "^5.2.2"
   }
 }

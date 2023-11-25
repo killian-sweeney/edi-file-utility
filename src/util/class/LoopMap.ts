@@ -7,8 +7,8 @@ import FieldMap from "./FieldMap"
  * let itemArray: object = new LoopMap(
  * 	0,	// position
  * 	{	// values
- * 		subscriberIndicator: new FieldMap("INS", null, null, 0),
- * 		subscriberNumber: new FieldMap("REF", "0F", 0, 1)
+ * 		subscriberIndicator: new FieldMap("INS",null, null, 0),
+ * 		subscriberNumber:    new FieldMap("REF","0F", 0   , 1)
  * 	}
  * );
  * console.log(itemArray)

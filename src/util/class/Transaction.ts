@@ -60,7 +60,7 @@ export default class Transaction {
 	 */
 	toJSON(): object {
 		return {
-			segments: this.segments.map((segment) => segment.toJSON()),
+			segments: this.segments.map((segment) => segment.toJson()),
 			loops: this.loops.map((loop) => loop.toJson()),
 		};
 	}

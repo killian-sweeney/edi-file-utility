@@ -231,50 +231,58 @@ export default class Transaction {
 	 */
 	private runLoop(loop: Loop): void {
 		let segments = this.getSegments();
+
+		// console.log("<-- SEGMENTS IN runLoop -->")
+		// console.log(segments)
+
 		const identifierStartsLoop = loop.segmentIdentifiers[0];
+
+		// console.log(`identifierStartsLoop: ${loop.segmentIdentifiers[0]}`)
 
 		if (typeof identifierStartsLoop === "string") {
 			segments = segments.splice(
 				segments.findIndex((segment: Segment) => {
+
+
+					
 					return segment.name === identifierStartsLoop;
 				}),
 				segments.length - 1
 			);
 		}
-		// can never be object...
-		// else if (typeof identifierStartsLoop === "object") {
-		// 	const loopStartIndex = segments.findIndex((segment) => {
-		// 		return (
-		// 			segment.name === identifierStartsLoop.segmentIdentifier &&
-		// 			segment.getFields()[identifierStartsLoop.identifierPosition]
-		// 				.element === identifierStartsLoop.identifierValue
-		// 		);
-		// 	});
-		// 	segments = segments.splice(loopStartIndex, segments.length - 1);
-		// }
 
 		this.debug && console.log("[Segments in Loop]", segments);
+
 		let loopSegments: Segment[] = [];
+
 		for (let segment of segments) {
+
 			this.debug && console.log("[Segment]", segment);
+
 			if (loop.getSegmentIdentifiers().includes(segment.name)) {
+
 				this.debug && console.log("[Segment Name]", segment.name);
-				// more object error stuff
-				// if (typeof identifierStartsLoop === "object") {
-				// 	if (loopSegments.length === 0) {
-				// 		if (
-				// 			segment.getFields()[identifierStartsLoop.identifierPosition]
-				// 				.element !== identifierStartsLoop.identifierValue
-				// 		) {
-				// 			continue;
-				// 		}
-				// 	}
-				// }
+
 				if (loopSegments.length === loop.getSegmentIdentifiers().length - 1) {
+
 					this.debug && console.log("[Last segment identifier for loop]");
+
+					// console.log("<-- loopSegments -->")
+					// console.log(loopSegments)
+					
 					loop.contents.push(...loopSegments, segment);
+					
+					// console.log("loop.contents after push")
+					// console.log(loop.contents)
+					
 					loopSegments = [];
-				} else {
+				} 
+
+				else {
+				
+					// console.log("loopSegments.push(segment);")
+					// console.log(segment)
+				
 					loopSegments.push(segment);
 				}
 			}
@@ -290,53 +298,26 @@ export default class Transaction {
 	mapSegments(mapLogic: object, mapSegments: Segment[]): object {
 
 		let result: any = {};
-
-		// console.log("<-- MAP LOGIC -->")
-		// console.log(mapLogic)
-		// console.log("typeof mapLogic:", typeof mapLogic);
-		// console.log("MapLogic instanceof FieldMap:", mapLogic instanceof FieldMap);
-
-		
-		console.log("<-- TOP of mapSegment() -->")
+	
 		Object.entries(mapLogic).forEach(([key, value]) => {
-			// The FieldMap object is used to map a field from a segment to a key in the result 
 
-			// console.log(typeof value)
-			// console.log(`key: ${key} | value: ${value}`)
-
-
-			// START REMAKE AREA
-			
-			// console.log(`KEY   = ${key}`)
-			// console.log(`VALUE = ${value}`)
-
-			console.log(` * the type of ${value} is`, typeof value)
 			if (value === null) {
 				console.log("   * value === null")
 			}
 			
-			// END REMAKE AREA
 
 
 			if (value instanceof FieldMap) {
 
-				console.log("value instanceof Fieldmap:", value instanceof FieldMap)
+				// console.log("value instanceof Fieldmap:", value instanceof FieldMap, value)
 				
 				let segment: Segment[] | Segment = mapSegments.filter(
 					(segment: Segment) => segment.name === value.segmentIdentifier,
 				);
 
-				console.log(`<-- SEGMENT -->`)
-					console.log(segment)
-
 				if (segment.length === 1) {
 
-					// console.log("segment.length === 1")
-					// console.log("BEFORE:", segment);
-
 					segment = segment[0];
-
-					// console.log("AFTER:", segment)
 
 				} else {
 					segment = segment.filter((segment: Segment) => {
@@ -359,9 +340,9 @@ export default class Transaction {
 					return;
 				}
 
-				if (value.identifierValue === null) {
-					console.log(value)
-					if (segment.getFields()[value.valuePosition] === null) return;
+				if (value.identifierValue === null) {			
+					if (segment.getFields()[value.valuePosition] === undefined)
+						return;
 					return (result[key] =
 						segment.getFields()[value.valuePosition].element);
 				}
@@ -397,11 +378,11 @@ export default class Transaction {
 			// LoopMap is used to map a loop to a key in the result object
 			if (value instanceof LoopMap) {
 
-			console.log("<-- LOOP MAP -->", value instanceof LoopMap)
+			// console.log("<-- LOOP MAP -->", value instanceof LoopMap)
 
 				const loop = this.loops[value.position];
 				
-				console.log(loop)
+				// console.log(loop)
 
 				if (!loop) {
 					return;
@@ -416,7 +397,7 @@ export default class Transaction {
 
 			// Object is used to map an object to a key in the result object
 			if (typeof value === 'object') {
-				console.log("INSTANCEOF OBJECT!!")
+				// console.log("INSTANCEOF OBJECT!!")
 				result[key] = this.mapSegments(value, mapSegments);
 				return;
 			}
@@ -740,7 +721,9 @@ transaction.generateSegments(file);
 const itemLoop = new Loop();
 itemLoop.setPosition(0);
 
-itemLoop.addSegmentIdentifiers(["INS", "REF", "REF","REF","REF", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP" ]);
+itemLoop.addSegmentIdentifiers(["INS", "REF", "REF", "DTP", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP", "DTP"]);
+// ["INS", "REF", "REF", "DTP", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP", "DTP"]
+
 
 transaction.addLoop(itemLoop);
 // console.log(transaction.loops)
@@ -757,10 +740,12 @@ transaction.addLoop(itemLoop);
 // 	  contents: [ [] ]
 // 	}
 // ]
+// console.log("BEFORE RUNLOOPS")
+// console.log(JSON.stringify(transaction.loops[0].contents))
 
 transaction.runLoops();
 // console.log("TEST RESULT")
-// console.log(JSON.stringify(transaction.loops[0].contents))
+// console.log(JSON.stringify(transaction.loops[0].contents[0]))
 
 // console.log(transaction.segments[0])
 	// Segment {
@@ -806,7 +791,7 @@ const mapLogic = {
 			interchangeReceiverId: 					new FieldMap("ISA", null, null,  7),
 			interchangeDate: 						new FieldMap("ISA", null, null,  8),
 			interchangeTime: 						new FieldMap("ISA", null, null,  9),
-			interchangeControlStandardsIdentifier: 	new FieldMap("ISA", null, null,  0),
+			interchangeControlStandardsIdentifier: 	new FieldMap("ISA", null, null, 10),
 			interchangeControlVersionNumber: 		new FieldMap("ISA", null, null, 11),
 			interchangeControlNumber: 				new FieldMap("ISA", null, null, 12),
 			acknowledgmentRequested: 				new FieldMap("ISA", null, null, 13),
@@ -834,23 +819,47 @@ const mapLogic = {
 		member: new LoopMap(
 			0,
 			{
-				subscriberIndicator: 		new FieldMap("INS", null, null,  0),
-				individualRelationshipCode: new FieldMap("INS", null, null,  1),
-				insuredMaintenanceTypeCode: new FieldMap("INS", null, null,  2),
-				maintenanceReasonCode: 		new FieldMap("INS", null, null,  3),
-				benefitStatusCode:			new FieldMap("INS", null, null,  4),
-				medicarePlanCode: 			new FieldMap("INS", null, null,  5),
-				cobraQualifyingEventCode: 	new FieldMap("INS", null, null,  6),
-				employmentStatusCode: 		new FieldMap("INS", null, null,  7),
-				studentStatusCode: 			new FieldMap("INS", null, null,  8),
-				handicapIndicator: 			new FieldMap("INS", null, null,  9),
-				deathDateFormatQualifier: 	new FieldMap("INS", null, null,  0),
-				insuredIndividualDeathDate: new FieldMap("INS", null, null, 11),
-				confidentialityCodeNotUsed: new FieldMap("INS", null, null, 12),
-				cityNotUsed: 				new FieldMap("INS", null, null, 13),
-				stateCodeNotUsed: 			new FieldMap("INS", null, null, 14),
-				countryCodeNotUsed: 		new FieldMap("INS", null, null, 15),
-				birthSequenceNumber:		new FieldMap("INS", null, null, 16),
+				memberLevelDetail: {
+					subscriberIndicator: 		new FieldMap("INS", null, null,  0),
+					individualRelationshipCode: new FieldMap("INS", null, null,  1),
+					insuredMaintenanceTypeCode: new FieldMap("INS", null, null,  2),
+					maintenanceReasonCode: 		new FieldMap("INS", null, null,  3),
+					benefitStatusCode:			new FieldMap("INS", null, null,  4),
+					medicarePlanCode: 			new FieldMap("INS", null, null,  5),
+					cobraQualifyingEventCode: 	new FieldMap("INS", null, null,  6),
+					employmentStatusCode: 		new FieldMap("INS", null, null,  7),
+					studentStatusCode: 			new FieldMap("INS", null, null,  8),
+					handicapIndicator: 			new FieldMap("INS", null, null,  9),
+					deathDateFormatQualifier: 	new FieldMap("INS", null, null,  0),
+					insuredIndividualDeathDate: new FieldMap("INS", null, null, 11),
+					confidentialityCodeNotUsed: new FieldMap("INS", null, null, 12),
+					cityNotUsed: 				new FieldMap("INS", null, null, 13),
+					stateCodeNotUsed: 			new FieldMap("INS", null, null, 14),
+					countryCodeNotUsed: 		new FieldMap("INS", null, null, 15),
+					birthSequenceNumber:		new FieldMap("INS", null, null, 16),
+				},
+				subscriberNumber: {
+					subscriberReferenceIdQualifier: new FieldMap("REF", "0F", 0, 0),
+					subscriberNumber: 				new FieldMap("REF", "0F", 0, 1),
+					subscriberDescription: 			new FieldMap("REF", "0F", 0, 2)
+				},
+				memberPolicyNumber: {
+					groupReferenceIdentificationQualifier: 	new FieldMap("REF","1L", 0, 1),
+					groupId: 								new FieldMap("REF","1L", 0, 1),
+					groupDescription: 						new FieldMap("REF","1L", 0, 2)
+				},
+				// memberIdentificationDivision: {},
+				// memberIdentificationDependentNumber: {},
+				// employmentStart: {},
+				// employmentEnd: {},
+				// memberName: {},
+				// memberTelecommunications: {},
+				// memberResidenceStreetAddress: {},
+				// memberResidenceCityStateZipCode: {},
+				// memberDemographics: {},
+				// healthCoverage: {},
+				// healthCoverageBegin: {},
+				// healthCoverageEnd: {}
 			}
 		)
 	}
@@ -865,5 +874,6 @@ const output = transaction.mapSegments(mapLogic, transaction.getSegments());
 
 
 // console.log(`output: ${output}`);
-console.log("<-- OUTPUT -->")
-console.log(output)
+// console.log("<-- OUTPUT -->")
+console.log(JSON.stringify(output))
+// console.log(output)

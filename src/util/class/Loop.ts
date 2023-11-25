@@ -1,3 +1,5 @@
+import Segment from "./Segment";
+
 /**
  * @class Loop
  * @description A Loop is a collection of Segments that are related to one another.
@@ -21,7 +23,7 @@ export default class Loop {
 	constructor(
 		public position: number | null = null,
 		public segmentIdentifiers: string[] = [],
-		public contents: Array<Array<string>> = [[]]
+		public contents: Segment[] = []
 	) { }
 
 	/**

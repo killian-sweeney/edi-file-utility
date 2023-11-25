@@ -235,7 +235,7 @@ export default class Transaction {
 
 		if (typeof identifierStartsLoop === "string") {
 			segments = segments.splice(
-				segments.findIndex((segment) => {
+				segments.findIndex((segment: Segment) => {
 					return segment.name === identifierStartsLoop;
 				}),
 				segments.length - 1
@@ -272,7 +272,7 @@ export default class Transaction {
 				// }
 				if (loopSegments.length === loop.getSegmentIdentifiers().length - 1) {
 					this.debug && console.log("[Last segment identifier for loop]");
-					loop.contents.push([...JSON.stringify(loopSegments), JSON.stringify(segment)]);
+					loop.contents.push(...loopSegments, segment);
 					loopSegments = [];
 				} else {
 					loopSegments.push(segment);
@@ -284,139 +284,59 @@ export default class Transaction {
 	}
 
 	/**
-	 * @memberof Transaction
-	 * @method mapSegments
 	 * @description Map segments to a JSON object
-	 * @param {Object} mapLogic - The map logic to use to map segments and fields to a JSON object
-	 * @param {Array.<Segment>} mapSegments - The segments to map to a JSON object (defaults to the segments in the transaction instance)
-	 * @returns {Object}
 	 * @example
-	 * const mapLogic = {
-	 *  header: {
-	 *   sender: new FieldMap({
-	 *   segmentIdentifier: "N1",
-	 *  identifierValue: "SF",
-	 * identifierPosition: 0,
-	 * valuePosition: 1,
-	 * }),
-	 * receiver: new FieldMap({
-	 * segmentIdentifier: "N1",
-	 * identifierValue: "ST",
-	 * identifierPosition: 0,
-	 * valuePosition: 1,
-	 * }),
-	 * transmissionDate: new FieldMap({
-	 * segmentIdentifier: "GS",
-	 * identifierValue: null,
-	 * identifierPosition: null,
-	 * valuePosition: 3,
-	 * }),
-	 * warehouseReceiptNumber: new FieldMap({
-	 * segmentIdentifier: "W17",
-	 * identifierValue: null,
-	 * identifierPosition: null,
-	 * valuePosition: 2,
-	 * }),
-	 * warehouse: {
-	 * name: new FieldMap({
-	 * segmentIdentifier: "N1",
-	 * identifierValue: "WH",
-	 * identifierPosition: 0,
-	 * valuePosition: 1,
-	 * }),
-	 * code: new FieldMap({
-	 * segmentIdentifier: "N1",
-	 * identifierValue: "WH",
-	 * identifierPosition: 0,
-	 * valuePosition: 3,
-	 * }),
-	 * },
-	 * },
-	 * detail: {
-	 * items: new LoopMap({
-	 * position: 0,
-	 * values: {
-	 * itemCode: new FieldMap({
-	 * segmentIdentifier: "W07",
-	 * identifierValue: null,
-	 * identifierPosition: null,
-	 * valuePosition: 4,
-	 * }),
-	 * lotCode: new FieldMap({
-	 * segmentIdentifier: "W07",
-	 * identifierValue: null,
-	 * identifierPosition: null,
-	 * valuePosition: 7,
-	 * }),
-	 * productionDate: new FieldMap({
-	 * segmentIdentifier: "N9",
-	 * identifierValue: null,
-	 * identifierPosition: null,
-	 * valuePosition: 1,
-	 * }),
-	 * netWeight: new FieldMap({
-	 * segmentIdentifier: "W20",
-	 * identifierValue: null,
-	 * identifierPosition: null,
-	 * valuePosition: 3,
-	 * }),
-	 * quantity: new FieldMap({
-	 * segmentIdentifier: "W07",
-	 * identifierValue: null,
-	 * identifierPosition: null,
-	 * valuePosition: 0,
-	 * }),
-	 * },
-	 * }),
-	 * },
-	 * };
-	 * const mapSegments = transaction.getSegments();
-	 * const mapped = transaction.mapSegments(mapLogic, mapSegments);
-	 * console.log(mapped);
-	 * // {
-	 * //   header: {
-	 * //     sender: "SENDER",
-	 * //     receiver: "RECEIVER",
-	 * //     transmissionDate: "20210101",
-	 * //     warehouseReceiptNumber: "1234567890",
-	 * //     warehouse: {
-	 * //       name: "WAREHOUSE NAME",
-	 * //       code: "WAREHOUSE CODE",
-	 * //     },
-	 * //   },
-	 * //   detail: {
-	 * //     items: [
-	 * //       {
-	 * //         itemCode: "ITEM CODE",
-	 * //         lotCode: "LOT CODE",
-	 * //         productionDate: "20210101",
-	 * //         netWeight: "1000",
-	 * //         quantity: "100",
-	 * //       },
-	 * //     ],
-	 * //   },
-	 * // }
 	 */
-	mapSegments(mapLogic: object, mapSegments: Segment[] | null = null): object {
+	mapSegments(mapLogic: object, mapSegments: Segment[]): object {
+
 		let result: any = {};
 
+		console.log("<-- MAP LOGIC -->")
+		console.log(mapLogic)
+		console.log("typeof mapLogic:", typeof mapLogic);
+		console.log("MapLogic instanceof FieldMap:", mapLogic instanceof FieldMap);
+
+		
+		console.log("<-- START OF FOR EACH -->")
 		Object.entries(mapLogic).forEach(([key, value]) => {
+			// The FieldMap object is used to map a field from a segment to a key in the result 
 
-			// The FieldMap object is used to map a field from a segment to a key in the result object
+			// console.log(typeof value)
+			// console.log(`key: ${key} | value: ${value}`)
+
+
+			// START REMAKE AREA
+			
+			console.log(`KEY   = ${key}`)
+			console.log(`VALUE = ${JSON.stringify(value)}`)
+
+			console.log(` * the type of ${JSON.stringify(value)} is`, typeof value)
+			if (value === null) {
+				console.log("   * value === null")
+			}
+			
+			// END REMAKE AREA
+
+
 			if (value instanceof FieldMap) {
-				if (!mapSegments) {
-					mapSegments = this.getSegments();
-				};
-
-				let segment: Segment[] | Segment = mapSegments.filter(
+				console.log("we're here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+				let segment: Segment[] = mapSegments.filter(
 					(segment: Segment) => segment.name === value.segmentIdentifier,
 				);
 
+				console.log(`<-- SEGMENT: ${JSON.stringify(segment)} -->`)
+
 				if (segment.length === 1) {
+
+					console.log("segment.length === 1")
+					console.log("BEFORE:", segment);
+
 					segment = segment[0];
-				}
-				else {
-					segment = segment.filter((segment) => {
+
+					console.log("AFTER:", segment)
+
+				} else {
+					segment = segment.filter((segment: Segment) => {
 						if (value.identifierPosition !== null) {
 							return (
 								segment.getFields()[value.identifierPosition].element ===
@@ -425,11 +345,10 @@ export default class Transaction {
 						} else {
 							return (null);
 						}
+						
 					});
 					segment = segment[0];
 				}
-
-				// end of weird handler
 
 				if (!segment) {
 					this.debug &&
@@ -438,18 +357,13 @@ export default class Transaction {
 				}
 
 				if (value.identifierValue === null) {
-					if (segment.getFields()[value.valuePosition] === undefined) return;
+					if (segment.getFields()[value.valuePosition] === null) return;
 					return (result[key] =
 						segment.getFields()[value.valuePosition].element);
 				}
 
-
-				if (value.identifierPosition === null) {
-
-				} else {
-
 					const isValid =
-						segment.getFields()[value.identifierPosition].element ===
+						segment[0].getFields()[value.identifierPosition].element ===
 						value.identifierValue;
 
 					if (!isValid) {
@@ -464,9 +378,9 @@ export default class Transaction {
 						return;
 					}
 
-				}
+				
 
-				const field: any = segment.getFields()[value.valuePosition];
+				const field: Field = segment.getFields()[value.valuePosition];
 
 				if (!field) {
 					this.debug && console.error("Field not found", value.valuePosition);
@@ -491,12 +405,13 @@ export default class Transaction {
 			}
 
 			// Object is used to map an object to a key in the result object
-			if (value instanceof Object) {
+			if (typeof value === 'object') {
+				console.log("INSTANCEOF OBJECT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 				result[key] = this.mapSegments(value, mapSegments);
 				return;
 			}
 		});
-
+		// console.log({result})
 		return result;
 	}
 
@@ -812,12 +727,12 @@ transaction.generateSegments(file);
 	// ]
 
 
-const itemLoop = new Loop();
-itemLoop.setPosition(0);
+// const itemLoop = new Loop();
+// itemLoop.setPosition(0);
 
-itemLoop.addSegmentIdentifiers(["INS", "REF", "REF", "DTP", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP", "DTP"]);
+// itemLoop.addSegmentIdentifiers(["INS", "REF", "REF","REF","REF", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP" ]);
 
-transaction.addLoop(itemLoop);
+// transaction.addLoop(itemLoop);
 // console.log(transaction.loops)
 // [
 // 	Loop {
@@ -833,8 +748,9 @@ transaction.addLoop(itemLoop);
 // 	}
 // ]
 
-transaction.runLoops();
-// console.log(transaction)
+// transaction.runLoops();
+// console.log("TEST RESULT")
+// console.log(JSON.stringify(transaction.loops[0].contents))
 
 // console.log(transaction.segments[0])
 	// Segment {
@@ -859,31 +775,43 @@ transaction.runLoops();
 	// 	]
 	//   }
 
-let authorizationInformationQualifier = new FieldMap("INS", null, null,  0);
-const mapLogic1 = authorizationInformationQualifier
+let authorizationInformationQualifier = new FieldMap("ISA", null, null,  0);
+let authorizationInformation		  =	new FieldMap("ISA", null, null,  1);
+const mapLogic1 = {authorizationInformationQualifier, authorizationInformation}
+
+console.log("<-- mapLogic1 -->")
+console.log(mapLogic1)
+
 
 const mapLogic = {
 	header: {
 		ISA: {
-			authorizationInformationQualifier: 		new FieldMap("INS", null, null,  0),
-			authorizationInformation: 				new FieldMap("INS", null, null,  1),
-			securityInformationQualifier: 			new FieldMap("INS", null, null,  2),
-			securityInformation: 					new FieldMap("INS", null, null,  3),
-			interchangeSenderIdQualifier: 			new FieldMap("INS", null, null,  4),
-			interchangeSenderId: 					new FieldMap("INS", null, null,  5),
-			interchangeReceiverIdQualifier: 		new FieldMap("INS", null, null,  6),
-			interchangeReceiverId: 					new FieldMap("INS", null, null,  7),
-			interchangeDate: 						new FieldMap("INS", null, null,  8),
-			interchangeTime: 						new FieldMap("INS", null, null,  9),
-			interchangeControlStandardsIdentifier: 	new FieldMap("INS", null, null,  0),
-			interchangeControlVersionNumber: 		new FieldMap("INS", null, null, 11),
-			interchangeControlNumber: 				new FieldMap("INS", null, null, 12),
-			acknowledgmentRequested: 				new FieldMap("INS", null, null, 13),
-			usageIndicator: 						new FieldMap("INS", null, null, 14),
-			componentElementSeparator:				new FieldMap("INS", null, null, 15),
+			authorizationInformationQualifier: 		new FieldMap("ISA", null, null,  0),
+			authorizationInformation: 				new FieldMap("ISA", null, null,  1),
+			securityInformationQualifier: 			new FieldMap("ISA", null, null,  2),
+			securityInformation: 					new FieldMap("ISA", null, null,  3),
+			interchangeSenderIdQualifier: 			new FieldMap("ISA", null, null,  4),
+			interchangeSenderId: 					new FieldMap("ISA", null, null,  5),
+			interchangeReceiverIdQualifier: 		new FieldMap("ISA", null, null,  6),
+			interchangeReceiverId: 					new FieldMap("ISA", null, null,  7),
+			interchangeDate: 						new FieldMap("ISA", null, null,  8),
+			interchangeTime: 						new FieldMap("ISA", null, null,  9),
+			interchangeControlStandardsIdentifier: 	new FieldMap("ISA", null, null,  0),
+			interchangeControlVersionNumber: 		new FieldMap("ISA", null, null, 11),
+			interchangeControlNumber: 				new FieldMap("ISA", null, null, 12),
+			acknowledgmentRequested: 				new FieldMap("ISA", null, null, 13),
+			usageIndicator: 						new FieldMap("ISA", null, null, 14),
+			componentElementSeparator:				new FieldMap("ISA", null, null, 15),
 		},
 		GS: {
-
+			functionalIdentifierCode:				new FieldMap("GS", null, null, 0),
+			applicationSenderId:					new FieldMap("GS", null, null, 1),
+			applicationReceiverId:					new FieldMap("GS", null, null, 2),
+			date:									new FieldMap("GS", null, null, 3),
+			time:									new FieldMap("GS", null, null, 4),
+			groupControlNumber:						new FieldMap("GS", null, null, 5),
+			responsibleAgencyCode:					new FieldMap("GS", null, null, 6),
+			versionReleaseIndustryIdentifierCode:	new FieldMap("GS", null, null, 7)
 		},
 		ST: {
 
@@ -917,11 +845,15 @@ const mapLogic = {
 		)
 	}
 }
-console.log(mapLogic.detail.member.values)
 
-// const jsonMapLogic = JSON.stringify(mapLogic)
 
-// console.log(transaction.getSegments())
+// console.log(JSON.stringify(transaction.getSegments()))
 
-const output = transaction.mapSegments(mapLogic1, transaction.getSegments());
-console.log(JSON.stringify(output))
+
+const output = transaction.mapSegments(mapLogic, transaction.getSegments());
+
+
+
+// console.log(`output: ${output}`);
+console.log("<-- OUTPUT -->")
+console.log(output)

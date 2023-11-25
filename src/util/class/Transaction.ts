@@ -316,10 +316,11 @@ export default class Transaction {
 				);
 
 				if (segment.length === 1) {
-
+					console.log( "segment.length === 1", segment)
 					segment = segment[0];
 
 				} else {
+					console.log( "segment.length !== 1", segment)
 					segment = segment.filter((segment: Segment) => {
 						if (value.identifierPosition !== null) {
 							return (
@@ -333,6 +334,8 @@ export default class Transaction {
 					});
 					segment = segment[0];
 				}
+
+				// console.log(segment)
 
 				if (!segment) {
 					this.debug &&
@@ -721,7 +724,7 @@ transaction.generateSegments(file);
 const itemLoop = new Loop();
 itemLoop.setPosition(0);
 
-itemLoop.addSegmentIdentifiers(["INS", "REF", "REF", "DTP", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP", "DTP"]);
+itemLoop.addSegmentIdentifiers(["INS", "REF" ]);
 // ["INS", "REF", "REF", "DTP", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP", "DTP"]
 
 
@@ -819,7 +822,6 @@ const mapLogic = {
 		member: new LoopMap(
 			0,
 			{
-				memberLevelDetail: {
 					subscriberIndicator: 		new FieldMap("INS", null, null,  0),
 					individualRelationshipCode: new FieldMap("INS", null, null,  1),
 					insuredMaintenanceTypeCode: new FieldMap("INS", null, null,  2),
@@ -830,25 +832,23 @@ const mapLogic = {
 					employmentStatusCode: 		new FieldMap("INS", null, null,  7),
 					studentStatusCode: 			new FieldMap("INS", null, null,  8),
 					handicapIndicator: 			new FieldMap("INS", null, null,  9),
-					deathDateFormatQualifier: 	new FieldMap("INS", null, null,  0),
+					deathDateFormatQualifier: 	new FieldMap("INS", null, null, 10),
 					insuredIndividualDeathDate: new FieldMap("INS", null, null, 11),
 					confidentialityCodeNotUsed: new FieldMap("INS", null, null, 12),
 					cityNotUsed: 				new FieldMap("INS", null, null, 13),
 					stateCodeNotUsed: 			new FieldMap("INS", null, null, 14),
 					countryCodeNotUsed: 		new FieldMap("INS", null, null, 15),
 					birthSequenceNumber:		new FieldMap("INS", null, null, 16),
-				},
-				subscriberNumber: {
+
 					subscriberReferenceIdQualifier: new FieldMap("REF", "0F", 0, 0),
-					subscriberNumber: 				new FieldMap("REF", "0F", 0, 1),
-					subscriberDescription: 			new FieldMap("REF", "0F", 0, 2)
-				},
-				memberPolicyNumber: {
-					groupReferenceIdentificationQualifier: 	new FieldMap("REF","1L", 0, 1),
+					subscriberNumberId:				new FieldMap("REF", "0F", 0, 1),
+					// subscriberDescription: 			new FieldMap("REF", "0F", 0, 2)
+
+					groupReferenceIdentificationQualifier: 	new FieldMap("REF","1L", 0, 0),
 					groupId: 								new FieldMap("REF","1L", 0, 1),
-					groupDescription: 						new FieldMap("REF","1L", 0, 2)
-				},
-				// memberIdentificationDivision: {},
+					// groupDescription: 						new FieldMap("REF","1L", 0, 2)
+
+					// memberIdentificationDivision: {},
 				// memberIdentificationDependentNumber: {},
 				// employmentStart: {},
 				// employmentEnd: {},

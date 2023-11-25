@@ -54,8 +54,3 @@ export default class FieldMap {
 		// };
 	}
 }
-let example = {
- 	subscriberIndicator: new FieldMap("INS",null, null, 0),
- 	subscriberNumber:    new FieldMap("REF","0F", 0   , 1)
- }
-console.log(example.subscriberIndicator.toJson())

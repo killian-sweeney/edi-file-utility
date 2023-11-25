@@ -1,4 +1,5 @@
 /**
+ * @class Loop
  * @description A Loop is a collection of Segments that are related to one another.
  * @example
  * const itemLoop = new Loop();

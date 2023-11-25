@@ -291,13 +291,13 @@ export default class Transaction {
 
 		let result: any = {};
 
-		console.log("<-- MAP LOGIC -->")
-		console.log(mapLogic)
-		console.log("typeof mapLogic:", typeof mapLogic);
-		console.log("MapLogic instanceof FieldMap:", mapLogic instanceof FieldMap);
+		// console.log("<-- MAP LOGIC -->")
+		// console.log(mapLogic)
+		// console.log("typeof mapLogic:", typeof mapLogic);
+		// console.log("MapLogic instanceof FieldMap:", mapLogic instanceof FieldMap);
 
 		
-		console.log("<-- START OF FOR EACH -->")
+		console.log("<-- TOP of mapSegment() -->")
 		Object.entries(mapLogic).forEach(([key, value]) => {
 			// The FieldMap object is used to map a field from a segment to a key in the result 
 
@@ -307,10 +307,10 @@ export default class Transaction {
 
 			// START REMAKE AREA
 			
-			console.log(`KEY   = ${key}`)
-			console.log(`VALUE = ${JSON.stringify(value)}`)
+			// console.log(`KEY   = ${key}`)
+			// console.log(`VALUE = ${value}`)
 
-			console.log(` * the type of ${JSON.stringify(value)} is`, typeof value)
+			console.log(` * the type of ${value} is`, typeof value)
 			if (value === null) {
 				console.log("   * value === null")
 			}
@@ -319,21 +319,24 @@ export default class Transaction {
 
 
 			if (value instanceof FieldMap) {
-				console.log("we're here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-				let segment: Segment[] = mapSegments.filter(
+
+				console.log("value instanceof Fieldmap:", value instanceof FieldMap)
+				
+				let segment: Segment[] | Segment = mapSegments.filter(
 					(segment: Segment) => segment.name === value.segmentIdentifier,
 				);
 
-				console.log(`<-- SEGMENT: ${JSON.stringify(segment)} -->`)
+				console.log(`<-- SEGMENT -->`)
+					console.log(segment)
 
 				if (segment.length === 1) {
 
-					console.log("segment.length === 1")
-					console.log("BEFORE:", segment);
+					// console.log("segment.length === 1")
+					// console.log("BEFORE:", segment);
 
 					segment = segment[0];
 
-					console.log("AFTER:", segment)
+					// console.log("AFTER:", segment)
 
 				} else {
 					segment = segment.filter((segment: Segment) => {
@@ -357,26 +360,27 @@ export default class Transaction {
 				}
 
 				if (value.identifierValue === null) {
+					console.log(value)
 					if (segment.getFields()[value.valuePosition] === null) return;
 					return (result[key] =
 						segment.getFields()[value.valuePosition].element);
 				}
 
-					const isValid =
-						segment[0].getFields()[value.identifierPosition].element ===
-						value.identifierValue;
+					// const isValid =
+					// 	segment.getFields()[value.identifierPosition].element ===
+					// 	value.identifierValue;
 
-					if (!isValid) {
-						this.debug &&
-							console.error(
-								"[Invalid identifier value]",
-								"Expected: ",
-								segment.getFields()[value.identifierPosition].element,
-								"Received: ",
-								value.identifierValue
-							);
-						return;
-					}
+					// if (!isValid) {
+					// 	this.debug &&
+					// 		console.error(
+					// 			"[Invalid identifier value]",
+					// 			"Expected: ",
+					// 			segment.getFields()[value.identifierPosition].element,
+					// 			"Received: ",
+					// 			value.identifierValue
+					// 		);
+					// 	return;
+					// }
 
 				
 
@@ -392,13 +396,19 @@ export default class Transaction {
 
 			// LoopMap is used to map a loop to a key in the result object
 			if (value instanceof LoopMap) {
+
+			console.log("<-- LOOP MAP -->", value instanceof LoopMap)
+
 				const loop = this.loops[value.position];
+				
+				console.log(loop)
+
 				if (!loop) {
 					return;
 				}
 
-				result[key] = loop.contents.map((element: any) => {
-					return this.mapSegments(value.values, element);
+				result[key] = loop.contents.map((element: Segment) => {
+					return this.mapSegments(value.values, [element]);
 				});
 
 				return;
@@ -406,7 +416,7 @@ export default class Transaction {
 
 			// Object is used to map an object to a key in the result object
 			if (typeof value === 'object') {
-				console.log("INSTANCEOF OBJECT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+				console.log("INSTANCEOF OBJECT!!")
 				result[key] = this.mapSegments(value, mapSegments);
 				return;
 			}
@@ -727,12 +737,12 @@ transaction.generateSegments(file);
 	// ]
 
 
-// const itemLoop = new Loop();
-// itemLoop.setPosition(0);
+const itemLoop = new Loop();
+itemLoop.setPosition(0);
 
-// itemLoop.addSegmentIdentifiers(["INS", "REF", "REF","REF","REF", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP" ]);
+itemLoop.addSegmentIdentifiers(["INS", "REF", "REF","REF","REF", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP" ]);
 
-// transaction.addLoop(itemLoop);
+transaction.addLoop(itemLoop);
 // console.log(transaction.loops)
 // [
 // 	Loop {
@@ -748,7 +758,7 @@ transaction.generateSegments(file);
 // 	}
 // ]
 
-// transaction.runLoops();
+transaction.runLoops();
 // console.log("TEST RESULT")
 // console.log(JSON.stringify(transaction.loops[0].contents))
 
@@ -779,8 +789,8 @@ let authorizationInformationQualifier = new FieldMap("ISA", null, null,  0);
 let authorizationInformation		  =	new FieldMap("ISA", null, null,  1);
 const mapLogic1 = {authorizationInformationQualifier, authorizationInformation}
 
-console.log("<-- mapLogic1 -->")
-console.log(mapLogic1)
+// console.log("<-- mapLogic1 -->")
+// console.log(mapLogic1)
 
 
 const mapLogic = {

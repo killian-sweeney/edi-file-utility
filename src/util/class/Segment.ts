@@ -12,7 +12,7 @@ export default class Segment {
 
 	constructor(
 		public name: string,
-		public fields: Field[] = []
+		public fields: any[] = []
 	) { }
 
 	/**

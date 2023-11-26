@@ -23,7 +23,7 @@ export default class Loop {
 	constructor(
 		public position: number | null = null,
 		public segmentIdentifiers: string[] = [],
-		public contents: Segment[] = []
+		public contents: Array<Array<object>> = []
 	) { }
 
 	/**

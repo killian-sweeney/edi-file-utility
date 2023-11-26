@@ -1,8 +1,9 @@
-import Field from "./Field.js";
-import FieldMap from "./FieldMap.js";
-import Loop from "./Loop.js";
-import LoopMap from "./LoopMap.js";
-import Segment from "./Segment.js";
+import { validateHeaderName } from "http";
+import Field from "./Field";
+import FieldMap from "./FieldMap";
+import Loop from "./Loop";
+import LoopMap from "./LoopMap";
+import Segment from "./Segment";
 
 /**
  * @class Transaction
@@ -24,39 +25,9 @@ export default class Transaction {
 	}
 
 	/**
-	 * @memberof Transaction
-	 * @method toJSON
+
 	 * @description Convert the transaction instance to a JSON object
-	 * @returns {Object}
 	 * @example
-	 * const json = transaction.toJSON();
-	 * console.log(json);
-	 * // {
-	 * //   segments: [
-	 * //     {
-	 * //       name: 'ST',
-	 * //       fields: [
-	 * //         { element: '945', position: 0 },
-	 * //         { element: '0001', position: 1 },
-	 * //       ]
-	 * //     },
-	 * //     {
-	 * //       name: 'B4',
-	 * //       fields: [
-	 * //         { element: 'N', position: 0 },
-	 * //         { element: '1234567890', position: 1 },
-	 * //         { element: '20210101', position: 2 },
-	 * //       ]
-	 * //     },
-	 * //   ],
-	 * //   loops: [
-	 * //     {
-	 * //       position: 0,
-	 * //       segmentIdentifiers: [ 'W07', 'N9', 'W20' ],
-	 * //       elements: []
-	 * //     }
-	 * //   ]
-	 * // }
 	 */
 	toJSON(): object {
 		return {
@@ -66,10 +37,7 @@ export default class Transaction {
 	}
 
 	/**
-	 * @memberof Transaction
-	 * @method getType
 	 * @description Get the type of EDI transaction 
-	 * @returns {string}
 	 * @example
 	 * const type = transaction.getType();
 	 * console.log(type);
@@ -91,10 +59,7 @@ export default class Transaction {
 	}
 
 	/**
-	 * @memberof Transaction
-	 * @method getSegments
 	 * @description Get all segments in the transaction instance
-	 * @returns {Array.<Segment>}
 	 * @example
 	 * const segments = transaction.getSegments();
 	 * console.log(segments);
@@ -116,15 +81,12 @@ export default class Transaction {
 	 * //   },
 	 * // ]
 	 */
-	getSegments(): Array<Segment> {
+	getSegments(): Segment[] {
 		return this.segments.map((segment) => segment);
 	}
 
 	/**
-	 * @memberof Transaction
-	 * @method listSegmentIdentifiers
 	 * @description Get all segment identifiers in the transaction instance
-	 * @returns {Array.<string>}
 	 * @example
 	 * const segmentIdentifiers = transaction.listSegmentIdentifiers();
 	 * console.log(segmentIdentifiers);
@@ -132,15 +94,12 @@ export default class Transaction {
 	 * //   'ST', 'B4', 'N1', 'N3', 'N4', 'G61', 'N1', 'N3', 'N4', 'G61',
 	 * // ]
 	 */
-	listSegmentIdentifiers(): Array<string> {
+	listSegmentIdentifiers(): string[] {
 		return this.segments.map((segment) => segment.name);
 	}
 
 	/**
-	 * @memberof Transaction
-	 * @method getLoops
 	 * @description Get all loops in the transaction instance
-	 * @returns {Array.<Loop>}
 	 * @example
 	 * const loops = transaction.getLoops();
 	 * console.log(loops);
@@ -182,16 +141,12 @@ export default class Transaction {
 	 * //   }
 	 * // ]
 	 */
-	getLoops(): Array<Loop> {
+	getLoops(): Loop[] {
 		return this.loops.map((loop) => loop);
 	}
 
 	/**
-	 * @memberof Transaction
-	 * @method addLoop
 	 * @description Add a loop to the transaction instance
-	 * @param {Loop} loop - The loop to add to the transaction instance
-	 * @returns {void}
 	 * @example
 	 * const loop = new Loop();
 	 * loop.addSegmentIdentifiers(["W07", "N9", "W20"]);
@@ -222,57 +177,47 @@ export default class Transaction {
 	}
 
 	/**
-	 * @access private
-	 * @memberof Transaction
-	 * @method runLoop
 	 * @description Run a loop
-	 * @param {Loop} loop - The loop to run
 	 * @returns {void}
 	 */
 	private runLoop(loop: Loop): void {
 		let segments = this.getSegments();
 
-		// console.log("<-- SEGMENTS IN runLoop -->")
+		// console.log("<-- SEGMENTS IN transaction --> runLoop -->")
 		// console.log(segments)
 
 		const identifierStartsLoop = loop.segmentIdentifiers[0];
+		console.log(`identifierStartsLoop: ${loop.segmentIdentifiers[0]}`)
 
-		// console.log(`identifierStartsLoop: ${loop.segmentIdentifiers[0]}`)
-
-		if (typeof identifierStartsLoop === "string") {
 			segments = segments.splice(
-				segments.findIndex((segment: Segment) => {
-
-
-					
+				segments.findIndex((segment: Segment) => {		
 					return segment.name === identifierStartsLoop;
 				}),
 				segments.length - 1
 			);
-		}
 
 		this.debug && console.log("[Segments in Loop]", segments);
 
 		let loopSegments: Segment[] = [];
 
 		for (let segment of segments) {
-
 			this.debug && console.log("[Segment]", segment);
 
 			if (loop.getSegmentIdentifiers().includes(segment.name)) {
-
 				this.debug && console.log("[Segment Name]", segment.name);
 
-				if (loopSegments.length === loop.getSegmentIdentifiers().length - 1) {
+				console.log(loopSegments.length, loop.getSegmentIdentifiers().length)
 
+				if (loopSegments.length === loop.getSegmentIdentifiers().length - 1) {
 					this.debug && console.log("[Last segment identifier for loop]");
 
-					// console.log("<-- loopSegments -->")
-					// console.log(loopSegments)
+					console.log("<-- loopSegments, 'if' -->")
+					console.log(loopSegments)
+
+					console.log("loop.contents after push")
+					loop.contents.push([...loopSegments, segment]);
 					
-					loop.contents.push(...loopSegments, segment);
 					
-					// console.log("loop.contents after push")
 					// console.log(loop.contents)
 					
 					loopSegments = [];
@@ -282,7 +227,12 @@ export default class Transaction {
 				
 					// console.log("loopSegments.push(segment);")
 					// console.log(segment)
-				
+					segment.fields.forEach((field) => {
+						field = field.toString();
+						console.log(`forEach(field):`, field)
+					});
+					console.log(`'else'`);
+					console.log(segment.fields);					
 					loopSegments.push(segment);
 				}
 			}
@@ -316,19 +266,26 @@ export default class Transaction {
 				);
 
 				if (segment.length === 1) {
-					console.log( "segment.length === 1", segment)
+
+					// console.log( "segment.length === 1", segment)
+					
 					segment = segment[0];
 
-				} else {
-					console.log( "segment.length !== 1", segment)
+				} 
+				else {
+					// console.log( "segment.length !== 1", `The Segment:`, segment)
+
 					segment = segment.filter((segment: Segment) => {
 						if (value.identifierPosition !== null) {
+
+
+							
 							return (
 								segment.getFields()[value.identifierPosition].element ===
 								value.identifierValue
 							);
 						} else {
-							return (null);
+							return;
 						}
 						
 					});
@@ -368,14 +325,13 @@ export default class Transaction {
 
 				
 
-				const field: Field = segment.getFields()[value.valuePosition];
+				const field: Field = segment.fields[value.valuePosition];
 
 				if (!field) {
 					this.debug && console.error("Field not found", value.valuePosition);
 					return;
 				}
-
-				return (result[key] = field.element);
+				return (result[key] = JSON.stringify(field.element));
 			}
 
 			// LoopMap is used to map a loop to a key in the result object
@@ -391,7 +347,7 @@ export default class Transaction {
 					return;
 				}
 
-				result[key] = loop.contents.map((element: Segment) => {
+				result[key] = loop.contents.map((element: any) => {
 					return this.mapSegments(value.values, [element]);
 				});
 
@@ -514,7 +470,7 @@ export default class Transaction {
 
 import * as fs from 'fs';
 
-
+// Reads in the data
 const file = fs.readFileSync("./bin/proto/input/834.edi", 'utf8');
 // console.log(file)
 // ISA*00*          *00*          *ZZ*123456789012345*ZZ*123456789012346*080503*1705*>*00501*000010216*0*T*:~
@@ -553,8 +509,10 @@ const file = fs.readFileSync("./bin/proto/input/834.edi", 'utf8');
 // GE*1*20213~
 // IEA*1*000010216~
 
+// Creates and Adds the Segements to the Transaction
 const transaction = new Transaction();
 transaction.generateSegments(file);
+// console.log(transaction.segments[0])
 // console.log(transaction)
 	// Transaction {
 	// 	segments: [
@@ -720,15 +678,17 @@ transaction.generateSegments(file);
 	// 	Segment { name: 'IEA', fields: [ [Field], [Field] ] }
 	// ]
 
-
+// Create the itemLoop and sets the position
 const itemLoop = new Loop();
 itemLoop.setPosition(0);
 
-itemLoop.addSegmentIdentifiers(["INS", "REF" ]);
+
+itemLoop.addSegmentIdentifiers(["INS", "REF", "REF", "REF", "REF", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP" ]);
 // ["INS", "REF", "REF", "DTP", "DTP", "NM1", "PER", "N3", "N4", "DMG", "HD", "DTP", "DTP"]
 
 
 transaction.addLoop(itemLoop);
+// console.log("<-- BEFORE RUN -->")
 // console.log(transaction.loops)
 // [
 // 	Loop {
@@ -748,7 +708,7 @@ transaction.addLoop(itemLoop);
 
 transaction.runLoops();
 // console.log("TEST RESULT")
-// console.log(JSON.stringify(transaction.loops[0].contents[0]))
+// console.log(JSON.stringify(transaction.loops))
 
 // console.log(transaction.segments[0])
 	// Segment {
@@ -772,6 +732,11 @@ transaction.runLoops();
 	// 	  Field { element: ':' }
 	// 	]
 	//   }
+
+console.log("<-- AFTER RUN -->")
+console.log(JSON.stringify(transaction.loops[0]))
+
+
 
 let authorizationInformationQualifier = new FieldMap("ISA", null, null,  0);
 let authorizationInformation		  =	new FieldMap("ISA", null, null,  1);
@@ -812,10 +777,20 @@ const mapLogic = {
 			versionReleaseIndustryIdentifierCode:	new FieldMap("GS", null, null, 7)
 		},
 		ST: {
-
+			transactionSetIdentifierCode: 		new FieldMap("ST", null, null, 0),
+			transactionSetControlNumber: 		new FieldMap("ST", null, null, 1),
+			implementationConventionReference: 	new FieldMap("ST", null, null, 2)
 		},
 		BGN: {
-
+			transactionSetPurposeCode: 		new FieldMap("BGN", null, null, 0), 
+			TransactionSetReferenceCode: 	new FieldMap("BGN", null, null, 1),
+			date: 							new FieldMap("BGN", null, null, 2),
+			time: 							new FieldMap("BGN", null, null, 3),
+			timeZoneCode: 					new FieldMap("BGN", null, null, 4),
+			affectsTransactionSetReference: new FieldMap("BGN", null, null, 5),
+			transactionTypeCode: 			new FieldMap("BGN", null, null, 6),
+			actionCode: 					new FieldMap("BGN", null, null, 7),
+			securityLevelCode: 				new FieldMap("BGN", null, null, 8)
 		}
 	},
 	detail: {
@@ -848,22 +823,49 @@ const mapLogic = {
 					groupId: 								new FieldMap("REF","1L", 0, 1),
 					// groupDescription: 						new FieldMap("REF","1L", 0, 2)
 
-					// memberIdentificationDivision: {},
-				// memberIdentificationDependentNumber: {},
-				// employmentStart: {},
+					memberIdentificationDivision: {
+						divisionReferenceIdQualifier: 	new FieldMap("REF", "DX", 0, 0),
+						division: 						new FieldMap("REF", "DX", 0, 1),
+						// divisionDescription: new FieldMap("REF", "DX", 0, 2)
+					},
+				memberIdentificationDependentNumber: {
+					dependentReferenceIdQualifier: 	new FieldMap("REF", "ZZ", 0, 0),
+					dependentId: 					new FieldMap("REF", "ZZ", 0, 1),
+					// dependentDescription: new FieldMap("REF", "ZZ", 0, 2)
+				},
+				employmentStart: {
+					employmentStartQualifier: 		new FieldMap("DTP", "336", 0, 0),
+					employmentStartFormatQualifier: new FieldMap("DTP", "336", 0, 1),
+					employmentStartDate: 			new FieldMap("DTP", "336", 0, 2)
+				},
 				// employmentEnd: {},
-				// memberName: {},
+				memberName: {
+					entityIdentifierCode: 			new FieldMap("NM1", null, null, 0),
+					entityTypeQualifier: 			new FieldMap("NM1", null, null, 1),
+					lastName: 						new FieldMap("NM1", null, null, 2),
+					firstName: 						new FieldMap("NM1", null, null, 3),
+					middleName: 					new FieldMap("NM1", null, null, 4),
+					prefix: 						new FieldMap("NM1", null, null, 5),
+					suffix: 						new FieldMap("NM1", null, null, 6),
+					identificationCodeQualifier: 	new FieldMap("NM1", null, null, 7),
+					identificationCode: 			new FieldMap("NM1", null, null, 8)
+				},
 				// memberTelecommunications: {},
 				// memberResidenceStreetAddress: {},
 				// memberResidenceCityStateZipCode: {},
 				// memberDemographics: {},
 				// healthCoverage: {},
-				// healthCoverageBegin: {},
+				healthCoverageBegin: {
+					benefitStartFormatQualifier: 	new FieldMap("DTP", "348", 0, 0),
+					benefitStartQualifier: 			new FieldMap("DTP", "348", 0, 1),
+					benefitStartDate: 				new FieldMap("DTP", "348", 0, 2)
+				},
 				// healthCoverageEnd: {}
 			}
 		)
 	}
 }
+
 
 
 // console.log(JSON.stringify(transaction.getSegments()))
@@ -875,5 +877,5 @@ const output = transaction.mapSegments(mapLogic, transaction.getSegments());
 
 // console.log(`output: ${output}`);
 // console.log("<-- OUTPUT -->")
-console.log(JSON.stringify(output))
+// console.log(JSON.stringify(output))
 // console.log(output)
